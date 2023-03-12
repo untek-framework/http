@@ -1,0 +1,27 @@
+{
+  "name": "untek-framework/http",
+  "type": "extension",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Zn Developer",
+      "email": "zndev@ya.ru"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "symfony/http-foundation": "^4.4|^5.0",
+    "symfony/http-kernel": "^5.4|^6.0",
+    "symfony/routing": "^4.4|^5.4|^6.0",
+    "symfony/event-dispatcher": "^4.4|^5.4|^6.0",
+    "symfony/config": "^4.4|^5.0|^6.0",
+    "psr/log": "^1|^2|^3",
+    "psr/container": "^1.1 || ^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Untek\\Framework\\Http\\": "src",
+      "Untek\\Framework\\Http\\Tests\\": "tests"
+    }
+  }
+}
