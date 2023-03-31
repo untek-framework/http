@@ -61,7 +61,7 @@ abstract class BaseHttpKernel extends HttpKernel
         int $type = HttpKernelInterface::MAIN_REQUEST,
         bool $catch = true
     ): Response {
-        $this->bindHttp($this->container);
+//        $this->bindHttp($this->container);
         $this->configureRoutes();
         $this->addRouterListener($request);
         return parent::handle($request, $type, $catch);
