@@ -1,7 +1,10 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\Loader\PhpFileLoader;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -13,6 +16,15 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $configurator): void {
     $services = $configurator->services();
+
+    $services->set(UrlGeneratorInterface::class, UrlGenerator::class)
+        ->args(
+            [
+                service(RouteCollection::class),
+                service(RequestContext::class),
+                service(LoggerInterface::class),
+            ]
+        );
 
     $services->set(UrlMatcherInterface::class, UrlMatcher::class)
         ->args(

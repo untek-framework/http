@@ -2,6 +2,8 @@
 
 namespace Untek\Framework\Http\Presentation\Http\Symfony\Controllers;
 
+use axy\backtrace\helpers\Represent;
+use axy\backtrace\Trace;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +15,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Untek\Core\Contract\Common\Exceptions\InvalidConfigException;
 use Untek\Core\Contract\Common\Exceptions\NotFoundException;
 use Untek\Core\Env\Helpers\EnvHelper;
+use Untek\Tool\Dev\Trace\Facades\DebugBacktrace;
 
 class HttpErrorController
 {
@@ -78,7 +81,18 @@ class HttpErrorController
         if (EnvHelper::isDebug()) {
             $params['exception'] = $exception;
         }
-        return new Response("<h1>{$params['title']}</h1><p>{$params['message']}</p>", $statusCode);
+
+        $content = "<h1>{$params['title']}</h1>";
+        $content .= "<p>{$params['message']}</p>";
+
+        if(getenv('APP_DEBUG')) {
+            $trace = new Trace($exception->getTrace());
+            $trace->trimFilename(getenv('ROOT_DIRECTORY'));
+            $traceContent = (Represent::trace($trace->getItems()));
+            $content .= "<p><code><pre>{$traceContent}</pre></code></p>";
+        }
+
+        return new Response($content, $statusCode);
     }
 
     private function notFound(Request $request, Exception $exception): Response
