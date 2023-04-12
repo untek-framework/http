@@ -93,7 +93,7 @@ class HttpErrorController
             $traceContent = (Represent::trace($trace->getItems()));
             $content .= "
                 <div class=\"alert alert-secondary\" role=\"alert\">
-                  <code><pre>{$traceContent}</pre></code>
+                  <pre><code>{$traceContent}</code></pre>
                 </div>";
         }
 
