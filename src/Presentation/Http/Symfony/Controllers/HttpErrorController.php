@@ -15,7 +15,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Untek\Core\Contract\Common\Exceptions\InvalidConfigException;
 use Untek\Core\Contract\Common\Exceptions\NotFoundException;
 use Untek\Core\Env\Helpers\EnvHelper;
-use Untek\Tool\Dev\Trace\Facades\DebugBacktrace;
 
 class HttpErrorController
 {
@@ -83,13 +82,19 @@ class HttpErrorController
         }
 
         $content = "<h1>{$params['title']}</h1>";
-        $content .= "<p>{$params['message']}</p>";
+        $content .= "
+            <div class=\"alert alert-danger\" role=\"alert\">
+              {$params['message']}
+            </div>";
 
-        if(getenv('APP_DEBUG')) {
+        if (getenv('APP_DEBUG')) {
             $trace = new Trace($exception->getTrace());
             $trace->trimFilename(getenv('ROOT_DIRECTORY'));
             $traceContent = (Represent::trace($trace->getItems()));
-            $content .= "<p><code><pre>{$traceContent}</pre></code></p>";
+            $content .= "
+                <div class=\"alert alert-secondary\" role=\"alert\">
+                  <code><pre>{$traceContent}</pre></code>
+                </div>";
         }
 
         return new Response($content, $statusCode);
