@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Untek\Core\Container\Traits\ContainerAttributeTrait;
@@ -26,7 +27,7 @@ abstract class BaseHttpKernel extends HttpKernel
 
     protected bool $debug;
 
-    abstract protected function configureRoutes(): void;
+    abstract protected function configureRoutes(RoutingConfigurator $routingConfigurator): void;
 
     abstract protected function getProjectDir(): string;
 
@@ -56,7 +57,8 @@ abstract class BaseHttpKernel extends HttpKernel
         int $type = HttpKernelInterface::MAIN_REQUEST,
         bool $catch = true
     ): Response {
-        $this->configureRoutes();
+        $routingConfigurator = $this->container->get(RoutingConfigurator::class);
+        $this->configureRoutes($routingConfigurator);
         $this->addRouterListener($request);
         return parent::handle($request, $type, $catch);
     }
