@@ -16,5 +16,6 @@ class HttpFrameworkBundle extends BaseBundle
     {
         $this->importServices($containerBuilder, __DIR__ . '/DependencyInjection/Symfony/services/routing.php');
         $this->importServices($containerBuilder, __DIR__ . '/DependencyInjection/Symfony/services/form.php');
+        $this->importServices($containerBuilder, __DIR__ . '/DependencyInjection/Symfony/services/main.php');
     }
 }
