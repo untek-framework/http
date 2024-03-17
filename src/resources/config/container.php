@@ -4,8 +4,11 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
-$containerBuilder = new ContainerBuilder();
+/**
+ * @var ContainerBuilder $containerBuilder
+ */
 
+//$containerBuilder = new ContainerBuilder();
 $fileLocator = new FileLocator(__DIR__);
 $loader = new PhpFileLoader($containerBuilder, $fileLocator);
 
