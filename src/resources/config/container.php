@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
  * @var ContainerBuilder $containerBuilder
  */
 
-//$containerBuilder = new ContainerBuilder();
+
 $fileLocator = new FileLocator(__DIR__);
 $loader = new PhpFileLoader($containerBuilder, $fileLocator);
 
