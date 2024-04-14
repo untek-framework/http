@@ -31,27 +31,6 @@ abstract class BaseHttpKernel extends HttpKernel
 
     abstract protected function getProjectDir(): string;
 
-    public function __construct(
-        ContainerInterface $container,
-        string $env,
-        bool $debug,
-        string $context,
-        bool $handleAllThrowables = false
-    ) {
-        $this->setContainer($container);
-
-        $this->environment = $env;
-        $this->debug = $debug;
-        $this->context = $context;
-
-        $dispatcher = $container->get(EventDispatcherInterface::class);
-        $requestStack = new RequestStack();
-        $logger = $this->container->get(LoggerInterface::class);
-        $resolver = new ControllerResolver($logger, $container);
-        $argumentResolver = new ArgumentResolver();
-        parent::__construct($dispatcher, $resolver, $requestStack, $argumentResolver, $handleAllThrowables);
-    }
-
     public function handle(
         Request $request,
         int $type = HttpKernelInterface::MAIN_REQUEST,
