@@ -15,7 +15,10 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
+use Untek\Core\Code\Helpers\DeprecateHelper;
 use Untek\Core\Container\Traits\ContainerAttributeTrait;
+
+DeprecateHelper::hardThrow();
 
 abstract class BaseHttpKernel extends HttpKernel
 {
@@ -30,6 +33,27 @@ abstract class BaseHttpKernel extends HttpKernel
     abstract protected function configureRoutes(RoutingConfigurator $routingConfigurator): void;
 
     abstract protected function getProjectDir(): string;
+
+    public function __construct(
+        ContainerInterface $container,
+        string $env,
+        bool $debug,
+        string $context,
+        bool $handleAllThrowables = false
+    ) {
+        $this->setContainer($container);
+
+        $this->environment = $env;
+        $this->debug = $debug;
+        $this->context = $context;
+
+        $dispatcher = $container->get(EventDispatcherInterface::class);
+        $requestStack = new RequestStack();
+        $logger = $this->container->get(LoggerInterface::class);
+        $resolver = new ControllerResolver($logger, $container);
+        $argumentResolver = new ArgumentResolver();
+        parent::__construct($dispatcher, $resolver, $requestStack, $argumentResolver, $handleAllThrowables);
+    }
 
     public function handle(
         Request $request,
