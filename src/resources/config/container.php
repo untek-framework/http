@@ -14,5 +14,3 @@ $loader = new PhpFileLoader($containerBuilder, $fileLocator);
 
 $loader->load(__DIR__ . '/services/routing.php');
 $loader->load(__DIR__ . '/services/form.php');
-
-//return $containerBuilder;
