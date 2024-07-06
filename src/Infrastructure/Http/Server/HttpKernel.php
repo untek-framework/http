@@ -19,12 +19,9 @@ use Symfony\Component\Routing\RequestContext;
 use Throwable;
 use Untek\Core\App\Bootstrap\AbstractAppKernel;
 use Untek\Core\App\Bootstrap\ConfigDirectory;
-use Untek\Core\Code\Helpers\DeprecateHelper;
 use Untek\Framework\Http\Infrastructure\Http\Symfony\ControllerResolver;
 
-DeprecateHelper::hardThrow();
-
-abstract class AbstractHttpKernel extends \Symfony\Component\HttpKernel\HttpKernel
+class HttpKernel extends \Symfony\Component\HttpKernel\HttpKernel
 {
 
     protected AbstractAppKernel $kernel;
@@ -38,10 +35,9 @@ abstract class AbstractHttpKernel extends \Symfony\Component\HttpKernel\HttpKern
     protected string $context;
     protected bool $isTest = false;
 
-    abstract protected function createKernel(): AbstractAppKernel;
-
     public function __construct(
-        string $projectDirectory,
+        AbstractAppKernel $kernel,
+        ConfigDirectory $configDirectory,
         string $environment,
         bool $debug,
         string $context,
@@ -51,6 +47,7 @@ abstract class AbstractHttpKernel extends \Symfony\Component\HttpKernel\HttpKern
         bool $handleAllThrowables = false
     )
     {
+        $this->kernel = $kernel;
         $this->environment = $environment;
         $this->debug = $debug;
         $this->context = $context;
@@ -58,7 +55,8 @@ abstract class AbstractHttpKernel extends \Symfony\Component\HttpKernel\HttpKern
         $this->cacheDirectory = $cacheDirectory;
         $this->isImportLocalConfig = $isImportLocalConfig;
 
-        $this->configDirectory = new ConfigDirectory($projectDirectory);
+        $kernel->boot();
+        $this->configDirectory = $configDirectory;
         $this->routeConfigurator = new RouteConfigurator($this->configDirectory, $this->context, $this->isImportLocalConfig);
         $dispatcher = $this->getContainer()->get(EventDispatcherInterface::class);
         $requestStack = new RequestStack();
@@ -113,11 +111,6 @@ abstract class AbstractHttpKernel extends \Symfony\Component\HttpKernel\HttpKern
 
     protected function getKernel(): AbstractAppKernel
     {
-        if (!isset($this->kernel)) {
-            $kernel = $this->createKernel();
-            $kernel->boot();
-            $this->kernel = $kernel;
-        }
         return $this->kernel;
     }
 
