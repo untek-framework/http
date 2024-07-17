@@ -1,0 +1,26 @@
+<?php
+
+namespace Untek\Framework\Http\Infrastructure\DependencyInjection;
+
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
+
+class HttpControllerPass implements CompilerPassInterface
+{
+
+    public function process(ContainerBuilder $container): void
+    {
+        $routeCollectionDefinition = $container->findDefinition(RouteCollection::class);
+        $controllerServices = $container->findTaggedServiceIds('http.controller', true);
+        foreach ($controllerServices as $controllerId => $tags) {
+            foreach ($tags as $tag) {
+                $routeName = !empty($tag['name']) ? $tag['name'] : trim($tag['path'], '/');
+                $route = new Route($tag['path'], ['_controller' => $controllerId]);
+                $route->setMethods($tag['methods']);
+                $routeCollectionDefinition->addMethodCall('add', [$routeName, $route]);
+            }
+        }
+    }
+}
