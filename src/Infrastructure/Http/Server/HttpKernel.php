@@ -4,6 +4,7 @@ namespace Untek\Framework\Http\Infrastructure\Http\Server;
 
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -23,6 +24,8 @@ use Untek\Framework\Http\Infrastructure\Http\Symfony\ControllerResolver;
 
 class HttpKernel extends \Symfony\Component\HttpKernel\HttpKernel
 {
+
+    use MicroKernelTrait;
 
     protected AbstractAppKernel $kernel;
     protected ConfigDirectory $configDirectory;

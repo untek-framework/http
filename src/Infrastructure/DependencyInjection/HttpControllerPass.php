@@ -16,10 +16,15 @@ class HttpControllerPass implements CompilerPassInterface
         $controllerServices = $container->findTaggedServiceIds('http.controller', true);
         foreach ($controllerServices as $controllerId => $tags) {
             foreach ($tags as $tag) {
-                $routeName = !empty($tag['name']) ? $tag['name'] : trim($tag['path'], '/');
+                if(empty($tag['methods'])) {
+                    $tag['methods'] = ['GET'];
+                }
+                if(empty($tag['name'])) {
+                    $tag['name'] = implode('_', $tag['methods']) . '_' . trim($tag['path'], '/');
+                }
                 $route = new Route($tag['path'], ['_controller' => $controllerId]);
                 $route->setMethods($tag['methods']);
-                $routeCollectionDefinition->addMethodCall('add', [$routeName, $route]);
+                $routeCollectionDefinition->addMethodCall('add', [$tag['name'], $route]);
             }
         }
     }
