@@ -22,6 +22,7 @@ class HttpControllerPass implements CompilerPassInterface
                 if(empty($tag['name'])) {
                     $tag['name'] = implode('_', $tag['methods']) . '_' . trim($tag['path'], '/');
                 }
+                // todo: возможны проблемы при компиляции контейнера
                 $route = new Route($tag['path'], ['_controller' => $controllerId]);
                 $route->setMethods($tag['methods']);
                 $routeCollectionDefinition->addMethodCall('add', [$tag['name'], $route]);
