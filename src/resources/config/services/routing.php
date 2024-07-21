@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
+use Untek\Framework\Http\Infrastructure\Http\Symfony\MyRouteCollection;
+use Untek\Framework\Http\Infrastructure\Http\Symfony\RouteCollectionConfigurator;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
@@ -33,8 +35,13 @@ return static function (ContainerConfigurator $configurator): void {
                 service(RequestContext::class),
             ]
         );
-    $services->set(RouteCollection::class, RouteCollection::class);
+    $services->set(RouteCollection::class, MyRouteCollection::class);
     $services->set(RequestContext::class, RequestContext::class);
+
+    /*$services->set(RouteCollectionConfigurator::class)
+        ->args([
+            service(RouteCollection::class),
+        ]);*/
 
     $services->set(FileLocator::class, FileLocator::class);
     $services->set(PhpFileLoader::class, PhpFileLoader::class)

@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Untek\Framework\Http\Infrastructure\Http\Symfony\RouteCollectionConfigurator;
 
 class HttpControllerPass implements CompilerPassInterface
 {
@@ -25,7 +26,15 @@ class HttpControllerPass implements CompilerPassInterface
                 // todo: возможны проблемы при компиляции контейнера
                 $route = new Route($tag['path'], ['_controller' => $controllerId]);
                 $route->setMethods($tag['methods']);
-                $routeCollectionDefinition->addMethodCall('add', [$tag['name'], $route]);
+
+//                $routeCollectionDefinition->addMethodCall('add', [$tag['name'], $route]);
+                $routeCollectionDefinition->addMethodCall('addRoute', [$controllerId, $tag['path'], $tag['name'], $tag['methods']]);
+
+//                $routeCollectionConfigurator->add($controllerId, $tag['path'], $tag['name'], $tag['methods']);
+
+//                $routeCollectionConfiguratorDefinition = $container->findDefinition(RouteCollectionConfigurator::class);
+//                $routeCollectionConfiguratorDefinition->addMethodCall('add', [$controllerId, $tag['path'], $tag['name'], $tag['methods']]);
+
             }
         }
     }
